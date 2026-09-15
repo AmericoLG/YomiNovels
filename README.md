@@ -40,28 +40,38 @@ docker-compose up --build
 ```
 
 3. Acceder a la aplicación:
-- Frontend: http://localhost:81
+- Frontend: http://localhost:5175
 - Backend API: http://localhost:3001
 - PostgreSQL: localhost:5434
 
 ## 📁 Estructura del proyecto
 
 ```
-YomiNovels/
-├── backend/
-│   ├── index.js           # Servidor Express
-│   ├── database.sql       # Esquema de base de datos
-│   ├── Dockerfile         # Configuración Docker backend
-│   ├── package.json       # Dependencias backend
-│   └── uploads/           # Archivos subidos
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx        # Componente principal
-│   │   └── main.jsx       # Punto de entrada
-│   ├── Dockerfile         # Configuración Docker frontend
-│   ├── nginx.conf         # Configuración Nginx
-│   └── package.json       # Dependencias frontend
-└── docker-compose.yml     # Orquestación de servicios
+Yomi/
+│
+├── backend/                              # Servidor API Node.js + Express
+│   ├── node_modules/                     # Paquetes y dependencias del backend
+│   ├── uploads/                          # Almacenamiento local de portadas e ilustraciones
+│   └── src/                              # Código fuente del backend
+│       ├── config/                       # Conexiones a BD (PostgreSQL) y variables de entorno
+│       ├── controllers/                  # Lógica de negocio (consultas SQL y respuestas HTTP)
+│       ├── middlewares/                  # Protecciones (JWT, roles admin/lector, Multer)
+│       ├── routes/                       # Endpoints públicos y privados (/api/auth, /api/novelas)
+│       └── utils/                        # Funciones auxiliares reutilizables (slugify, formateadores)
+│
+└── frontend/                             # Aplicación web React + Vite + Tailwind
+    ├── node_modules/                     # Paquetes y dependencias del frontend
+    ├── public/                           # Recursos estáticos globales (favicons, imágenes públicas)
+    └── src/                              # Código fuente del frontend
+        ├── assets/                       # Estilos CSS globales, fuentes e imágenes internas
+        ├── components/                   # Componentes de interfaz reutilizables
+        │   ├── common/                   # UI general (Navbar, Footer, Modales, Tarjetas)
+        │   ├── reader/                   # Interfaz de lectura (Controles de fuente, Comentarios)
+        │   └── editor/                   # Editor TipTap para redacción e inserción de imágenes
+        ├── context/                      # Estados globales (Autenticación JWT y sesión)
+        ├── pages/                        # Vistas de la aplicación (Home, Login, Detalle de novela)
+        │   └── admin/                    # Vistas del panel de administración (Dashboard, Crear novela)
+        └── services/                     # Clientes HTTP (Instancia de Axios y peticiones a la API)
 ```
 
 ## 🗄️ Base de Datos

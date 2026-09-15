@@ -33,6 +33,7 @@ services:
       DB_NAME: yomi
       DB_USER: yomi_user
       DB_PASSWORD: yomi_password
+      NODE_ENV: development
     ports:
       - "3001:3001"
     depends_on:
@@ -41,19 +42,28 @@ services:
     networks:
       - yomi-network
     volumes:
+      - ./backend:/app
+      - /app/node_modules
       - ./backend/uploads:/app/uploads
+    command: npm run dev
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: yomi-frontend
+    environment:
+      VITE_API_URL: http://localhost:3001/api
     ports:
-      - "81:80"
+      - "5175:5175"
     depends_on:
       - backend
     networks:
       - yomi-network
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
 
 volumes:
   postgres_data:

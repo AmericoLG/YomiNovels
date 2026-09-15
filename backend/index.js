@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
@@ -12,23 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Database connection
-const pool = new Pool({
-  host: process.env.DB_HOST || 'postgres',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'yomi',
-  user: process.env.DB_USER || 'yomi_user',
-  password: process.env.DB_PASSWORD || 'yomi_password',
-});
-
-// Test database connection
-pool.on('connect', () => {
-  console.log('Connected to PostgreSQL database');
-});
-
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-  process.exit(-1);
-});
+require('./src/config/database');
 
 // Routes
 app.get('/', (req, res) => {
@@ -37,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.get('/health', async (req, res) => {
   try {
+    const pool = require('./src/config/database');
     const result = await pool.query('SELECT NOW()');
     res.json({ 
       status: 'healthy', 
@@ -51,6 +35,9 @@ app.get('/health', async (req, res) => {
     });
   }
 });
+
+// API Routes
+app.use('/api/auth', require('./src/routes/authRoutes'));
 
 // Start server
 app.listen(PORT, () => {
