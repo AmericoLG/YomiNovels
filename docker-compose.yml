@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: yomi-postgres
+    environment:
+      POSTGRES_DB: yomi
+      POSTGRES_USER: yomi_user
+      POSTGRES_PASSWORD: yomi_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "5434:5432"
+    networks:
+      - yomi-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yomi_user -d yomi"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: yomi-backend
+    environment:
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: yomi
+      DB_USER: yomi_user
+      DB_PASSWORD: yomi_password
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - yomi-network
+    volumes:
+      - ./backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: yomi-frontend
+    ports:
+      - "81:80"
+    depends_on:
+      - backend
+    networks:
+      - yomi-network
+
+volumes:
+  postgres_data:
+
+networks:
+  yomi-network:
+    driver: bridge
