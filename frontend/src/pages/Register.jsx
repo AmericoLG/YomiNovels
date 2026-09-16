@@ -5,23 +5,31 @@ import { useAuth } from '../context/AuthContext';
 import logoImg from '../assets/images/logo.png';
 import bgLoginImg from '../assets/images/bg-login.png';
 
-const Login = () => {
+const Register = () => {
+  const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, setUser } = useAuth();
+  const { register, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     setLoading(true);
 
     // Simulación para desarrollo frontend sin backend
     setTimeout(() => {
       localStorage.setItem('token', 'simulated_token');
-      setUser({ id: 1, nombre: 'Usuario Demo', email: email, rol: 'lector' });
+      setUser({ id: 1, nombre: nombre, email: email, rol: 'lector' });
       navigate('/dashboard');
       setLoading(false);
     }, 500);
@@ -45,7 +53,7 @@ const Login = () => {
             className="h-[140px] w-auto max-w-full object-contain mb-5"
           />
           <h1 className="text-white text-[22px] font-black tracking-[1.5px] uppercase m-0 text-center whitespace-nowrap">
-            BIENVENIDO A YOMINOVELS
+            CREAR CUENTA EN YOMINOVELS
           </h1>
         </div>
 
@@ -59,10 +67,10 @@ const Login = () => {
         {/* FORMULARIO */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-[22px]">
           
-          {/* CAMPO NOMBRE DE USUARIO */}
+          {/* CAMPO NOMBRE */}
           <div className="flex flex-col gap-2 text-left">
             <label className="text-slate-200 text-[15px] font-semibold block">
-              Nombre de usuario
+              Nombre completo
             </label>
             <div className="relative flex items-center w-full">
               <div className="absolute left-4 flex items-center justify-center pointer-events-none z-4">
@@ -71,10 +79,32 @@ const Login = () => {
                 </svg>
               </div>
               <input
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                placeholder="Tu nombre"
+                required
+                className="w-full bg-slate-100 text-slate-900 text-base font-medium pl-[50px] pr-4 py-[14px] rounded-lg border-none outline-none box-border"
+              />
+            </div>
+          </div>
+
+          {/* CAMPO EMAIL */}
+          <div className="flex flex-col gap-2 text-left">
+            <label className="text-slate-200 text-[15px] font-semibold block">
+              Email
+            </label>
+            <div className="relative flex items-center w-full">
+              <div className="absolute left-4 flex items-center justify-center pointer-events-none z-4">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="YomiReader"
+                placeholder="tu@email.com"
                 required
                 className="w-full bg-slate-100 text-slate-900 text-base font-medium pl-[50px] pr-4 py-[14px] rounded-lg border-none outline-none box-border"
               />
@@ -103,29 +133,45 @@ const Login = () => {
             </div>
           </div>
 
-          {/* BOTÓN INICIAR SESIÓN */}
+          {/* CAMPO CONFIRMAR CONTRASEÑA */}
+          <div className="flex flex-col gap-2 text-left">
+            <label className="text-slate-200 text-[15px] font-semibold block">
+              Confirmar contraseña
+            </label>
+            <div className="relative flex items-center w-full">
+              <div className="absolute left-4 flex items-center justify-center pointer-events-none z-4">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="w-full bg-slate-100 text-slate-900 text-base font-medium pl-[50px] pr-4 py-[14px] rounded-lg border-none outline-none box-border"
+              />
+            </div>
+          </div>
+
+          {/* BOTÓN REGISTRARSE */}
           <button
             type="submit"
             disabled={loading}
             className="w-full mt-[10px] bg-[#5b54e0] text-white font-bold text-[17px] py-[15px] rounded-lg border-none cursor-not-allowed disabled:cursor-not-allowed shadow-[0_4px_18px_rgba(91,84,224,0.5)] transition-colors duration-200 hover:bg-[#4f46e5]"
           >
-            {loading ? 'Cargando...' : 'Iniciar Sesión'}
+            {loading ? 'Cargando...' : 'Registrarse'}
           </button>
         </form>
 
         {/* ENLACES INFERIORES */}
         <div className="mt-7 flex flex-col items-center gap-3 text-[15px]">
-          <a 
-            href="#forgot" 
-            className="text-slate-400 no-underline hover:text-slate-300 transition-colors"
-          >
-            ¿Olvidaste tu contraseña?
-          </a>
           <Link 
-            to="/register" 
+            to="/login" 
             className="text-indigo-400 no-underline font-semibold hover:text-indigo-300 transition-colors"
           >
-            Crear una cuenta
+            Ya tengo una cuenta
           </Link>
         </div>
 
@@ -134,4 +180,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

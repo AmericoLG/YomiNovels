@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/Header';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -9,21 +10,8 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold">YomiNovels</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-700">Hola, {user?.nombre}</span>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-            >
-              Cerrar Sesión
-            </button>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-slate-900">
+      <Header />
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-md p-6">
