@@ -29,6 +29,19 @@ const Header = () => {
             </div>
           </div>
 
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link to="/dashboard" className="text-slate-300 hover:text-white transition-colors font-medium">
+              Inicio
+            </Link>
+            <Link to="/catalog" className="text-slate-300 hover:text-white transition-colors font-medium">
+              Catálogo
+            </Link>
+            <Link to="/others" className="text-slate-300 hover:text-white transition-colors font-medium">
+              Otros
+            </Link>
+          </nav>
+
           {/* Right Icons */}
           <div className="flex items-center gap-4">
             {/* Bell Icon */}
