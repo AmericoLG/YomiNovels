@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Catalog from './pages/Catalog';
+import Profile from './pages/Profile';
+import Library from './pages/Library';
 import './index.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -40,6 +42,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <Catalog />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/library"
+            element={
+              <ProtectedRoute>
+                <Library />
               </ProtectedRoute>
             }
           />
