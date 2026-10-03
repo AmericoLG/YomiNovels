@@ -1,20 +1,26 @@
--- 1. TABLA DE USUARIOS (Administradores y Lectores)
+-- 1. TABLA DE USUARIOS (Administradores, Editores y Lectores)
 CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    rol VARCHAR(50) DEFAULT 'lector', -- 'admin' o 'lector'
+    rol VARCHAR(50) DEFAULT 'lector' CHECK (rol IN ('lector', 'editor', 'admin')),
     reset_token VARCHAR(255) DEFAULT NULL,
     reset_token_expira TIMESTAMP DEFAULT NULL,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Insertar usuario admin inicial (password: admin123)
+-- NOTA: El hash es para 'admin123' con bcrypt (salt rounds: 10)
+INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES 
+('Administrador', 'admin@yominovels.com', '$2b$10$/9oyMdEnWIRvrv4eigY4KOHHSkoQnFqqldc5riQu.uoimsNoflXQO', 'admin');
+
 -- 2. TABLA DE CATEGORÍAS Y GÉNEROS
 CREATE TABLE categorias (
     id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) UNIQUE NOT NULL,
-    slug VARCHAR(100) UNIQUE NOT NULL
+    nombre VARCHAR(100) NOT NULL UNIQUE,
+    slug VARCHAR(100) NOT NULL UNIQUE,
+    descripcion TEXT
 );
 
 -- 3. TABLA PRINCIPAL DE NOVELAS
@@ -23,11 +29,13 @@ CREATE TABLE novelas (
     titulo VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     sinopsis TEXT,
-    portada_url VARCHAR(500),
+    portada_url TEXT,
     autor VARCHAR(150),
-    estado VARCHAR(50) DEFAULT 'En emisión', -- 'En emisión', 'Finalizado', 'Pausado'
-    vistas INT DEFAULT 0,
-    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    tipo VARCHAR(50) DEFAULT 'Web Novel',
+    estado VARCHAR(50) DEFAULT 'En emisión',
+    vistas BIGINT DEFAULT 0,
+    creado_en TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 4. TABLA INTERMEDIA NOVELAS <-> CATEGORÍAS (Muchos a Muchos)

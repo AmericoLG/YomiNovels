@@ -9,6 +9,12 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    // Limpiar token simulado si existe
+    if (token === 'simulated_token') {
+      localStorage.removeItem('token');
+      setLoading(false);
+      return;
+    }
     if (token) {
       fetchProfile();
     } else {

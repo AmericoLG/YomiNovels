@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, setUser } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,13 +18,15 @@ const Login = () => {
     setError('');
     setLoading(true);
 
-    // Simulación para desarrollo frontend sin backend
-    setTimeout(() => {
-      localStorage.setItem('token', 'simulated_token');
-      setUser({ id: 1, nombre: 'Usuario Demo', email: email, rol: 'lector' });
+    const result = await login(email, password);
+    
+    if (result.success) {
       navigate('/dashboard');
-      setLoading(false);
-    }, 500);
+    } else {
+      setError(result.error);
+    }
+    
+    setLoading(false);
   };
 
   return (

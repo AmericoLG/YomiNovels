@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useState } from 'react';
 
 const Header = () => {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -92,6 +92,17 @@ const Header = () => {
                     <Link to="/library" className="block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white transition-colors">
                       Mi Biblioteca
                     </Link>
+                    
+                    {/* Opciones de Admin - Solo visibles para rol admin */}
+                    {user?.rol === 'admin' && (
+                      <>
+                        <hr className="border-slate-700/50 my-2" />
+                        <Link to="/admin/dashboard" className="block px-4 py-2 text-sm text-blue-400 font-semibold hover:bg-slate-700/50 hover:text-blue-300 transition-colors">
+                          Modo Admin
+                        </Link>
+                      </>
+                    )}
+                    
                     <hr className="border-slate-700/50 my-2" />
                     <button 
                       onClick={handleLogout}

@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import Catalog from './pages/Catalog';
 import Profile from './pages/Profile';
 import Library from './pages/Library';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminNovelas from './pages/admin/AdminNovelas';
 import './index.css';
 
 const ProtectedRoute = ({ children }) => {
@@ -17,6 +19,24 @@ const ProtectedRoute = ({ children }) => {
 
   if (!user) {
     return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
+const AdminRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (user.rol !== 'admin') {
+    return <Navigate to="/dashboard" />;
   }
 
   return children;
@@ -59,6 +79,22 @@ function App() {
               <ProtectedRoute>
                 <Library />
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/novelas"
+            element={
+              <AdminRoute>
+                <AdminNovelas />
+              </AdminRoute>
             }
           />
           <Route path="/" element={<Navigate to="/login" />} />
